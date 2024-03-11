@@ -10,6 +10,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Throwable;
 use Illuminate\Support\Facades\Validator;
+use Longman\TelegramBot\Entities\KeyboardButton;
 
 /**
  * Start command
@@ -123,6 +124,27 @@ class StartCommand extends UserCommand
 
                 $notes['birth_year'] = $text;
                 $text             = '';
+            case 2:
+                if ($message->getContact() === null) {
+                    $notes['state'] = 2;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(
+                        (new KeyboardButton(__('panel.telegram.share_contact')))->setRequestContact(true)
+                    ))
+                        ->setOneTimeKeyboard(true)
+                        ->setResizeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = __('panel.telegram.phone_number');
+                    if ($text !== '') {
+                        $data['text'] = __('panel.telegram.share_contact_please');
+                    }
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+
+                $notes['phone_number'] = $message->getContact()->getPhoneNumber();
         }
         return $result;
     }
