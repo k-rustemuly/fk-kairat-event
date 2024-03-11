@@ -85,13 +85,24 @@ class StartCommand extends UserCommand
                 if ($text === '') {
                     $notes['state'] = 0;
                     $this->conversation->update();
-                    $data['text'] = 'Имя:';
+                    $data['text'] = __('panel.telegram.name');
                     $result = Request::sendMessage($data);
                     break;
                 }
 
                 $notes['name'] = $text;
                 $text          = '';
+            case 1:
+                if ($text === '') {
+                    $notes['state'] = 1;
+                    $this->conversation->update();
+                    $data['text'] = __('panel.telegram.surname');
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+
+                $notes['surname'] = $text;
+                $text             = '';
         }
         return $result;
     }
