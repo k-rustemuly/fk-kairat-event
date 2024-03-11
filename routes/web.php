@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TelegrammController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['excluded_middleware' => ['web']], function () {
+    Route::post('/webhook/telegram', [TelegrammController::class, 'webhook'])->name('webhook.telegram');
+});
+
+Route::get('/set/webhook/telegram', [TelegrammController::class, 'setWebhook']);

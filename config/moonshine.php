@@ -1,11 +1,11 @@
 <?php
 
+use App\MoonShine\Layouts\MoonShineLayout;
 use MoonShine\Exceptions\MoonShineNotFoundException;
 use MoonShine\Forms\LoginForm;
 use MoonShine\Http\Middleware\Authenticate;
 use MoonShine\Http\Middleware\SecurityHeadersMiddleware;
 use MoonShine\Models\MoonshineUser;
-use MoonShine\MoonShineLayout;
 use MoonShine\Pages\ProfilePage;
 
 return [
@@ -60,7 +60,7 @@ return [
             'username' => 'email',
             'password' => 'password',
             'name' => 'name',
-            'avatar' => 'avatar',
+            'avatar' => false,
         ],
         'guard' => 'moonshine',
         'guards' => [
@@ -76,9 +76,13 @@ return [
             ],
         ],
         'pipelines' => [],
+        'admin' => [
+            'email' => env('MOONSHINE_ADMIN_EMAIL', 'email@mail.kz'),
+            'password' => env('MOONSHINE_ADMIN_PASSWORD', 'verystrongpassword'),
+            'name' => env('MOONSHINE_ADMIN_NAME', 'Jhon'),
+        ]
     ],
     'locales' => [
-        'en',
         'ru',
     ],
 
