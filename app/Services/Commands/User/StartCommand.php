@@ -161,9 +161,8 @@ class StartCommand extends UserCommand
                     $data['text'] = __('panel.telegram.active_confirm');
                     if ($text !== '') {
                         $data['text'] = __('panel.telegram.choose');
-                        $result = Request::sendMessage($data);
                     }
-
+                    $result = Request::sendMessage($data);
                     break;
                 }
 
