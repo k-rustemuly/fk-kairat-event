@@ -20,16 +20,13 @@
 
 namespace App\Services\TelegramBots\InfoBot\Commands\System;
 
-use App\Models\Log;
 use App\Models\User;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Smalot\PdfParser\Parser;
 use Illuminate\Support\Str;
-use Longman\TelegramBot\ChatAction;
-use Illuminate\Support\Facades\File;
+use Longman\TelegramBot\Conversation;
 
 class GenericmessageCommand extends SystemCommand
 {
@@ -47,6 +44,11 @@ class GenericmessageCommand extends SystemCommand
      * @var string
      */
     protected $version = '1.0.0';
+
+    /**
+     * @var bool
+     */
+    protected $need_mysql = true;
 
     /**
      * Command execute method if MySQL is required but not available
@@ -68,40 +70,18 @@ class GenericmessageCommand extends SystemCommand
     public function execute(): ServerResponse
     {
         $message = $this->getMessage();
-        $chat    = $message->getChat();
-        $chat_id = $chat->getId();
-        $message_type = $message->getType();
-        $data = [
-            'chat_id' => $chat_id,
-            'text'    => $message_type
-        ];
 
-        if($message_type == 'contact') {
-            $contact = $message->getContact();
-            $userFullName = str($chat->getFirstName().' '.$chat->getLastName())
-                ->squish()
-                ->value();
-            $phoneNumber = preg_replace('/[^0-9]/', '', $contact->getPhoneNumber());
-            $formattedPhoneNumber = preg_replace('/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/', '+$1 ($2) $3-$4-$5', $phoneNumber);
+        // If a conversation is busy, execute the conversation command after handling the message.
+        $conversation = new Conversation(
+            $message->getFrom()->getId(),
+            $message->getChat()->getId()
+        );
 
-            $user = User::firstOrNew(['phone_number' => $formattedPhoneNumber]);
-            if ($user->exists) {
-                $user->telegram_id = $chat_id;
-                $user->save();
-            } else {
-                $user->fill([
-                    'name' => $userFullName,
-                    'telegram_id' => $chat_id,
-                    'password' => Str::random(8)
-                ])->save();
-            }
-
-            $data = [
-                'chat_id' => $chat_id,
-                'text'    => '👇 Нажмите сюда (кнопка слева)',
-                'reply_markup' => json_encode(['remove_keyboard' => true]),
-            ];
+        // Fetch conversation command if it exists and execute it.
+        if ($conversation->exists() && $command = $conversation->getCommand()) {
+            return $this->telegram->executeCommand($command);
         }
-        return Request::sendMessage($data);
+
+        return Request::emptyResponse();
     }
 }
