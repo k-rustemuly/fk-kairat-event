@@ -14,6 +14,7 @@ class TelegrammController extends Controller
     {
         try {
             $bot = InfoBot::makeBot();
+            $bot->enableMysql();
             $bot->handle();
         } catch (TelegramException $e) {
             report_app($e);
