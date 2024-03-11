@@ -9,6 +9,7 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Throwable;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Start command
@@ -102,6 +103,21 @@ class StartCommand extends UserCommand
                 }
 
                 $notes['surname'] = $text;
+                $text             = '';
+            case 2:
+                $validator = Validator::make(['year' => $text], [
+                    'year' => 'date_format:Y'
+                ]);
+
+                if ($text === '' || $validator->fails()) {
+                    $notes['state'] = 2;
+                    $this->conversation->update();
+                    $data['text'] = __('panel.telegram.birth_year');
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+
+                $notes['birth_year'] = $text;
                 $text             = '';
         }
         return $result;
