@@ -2,6 +2,7 @@
 
 namespace App\Services\Commands\User;
 
+use App\Models\Participant;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Keyboard;
@@ -124,9 +125,9 @@ class StartCommand extends UserCommand
 
                 $notes['birth_year'] = $text;
                 $text             = '';
-            case 2:
+            case 3:
                 if ($message->getContact() === null) {
-                    $notes['state'] = 2;
+                    $notes['state'] = 3;
                     $this->conversation->update();
 
                     $data['reply_markup'] = (new Keyboard(
@@ -145,6 +146,40 @@ class StartCommand extends UserCommand
                 }
 
                 $notes['phone_number'] = $message->getContact()->getPhoneNumber();
+                $text             = '';
+
+            case 4:
+                if ($text === '' || !in_array($text, ['✔', '✖'], true)) {
+                    $notes['state'] = 4;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['✔', '✖']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = __('panel.telegram.active_confirm');
+                    if ($text !== '') {
+                        $data['text'] = __('panel.telegram.choose');
+                        $result = Request::sendMessage($data);
+                    }
+
+                    break;
+                }
+
+                $notes['is_active'] = $text === '✔';
+                $text          = '';
+            case 5:
+                $this->conversation->update();
+                unset($notes['state']);
+                $participant = [
+                    'telegram_id' => $chat_id,
+                ];
+                Participant::create(array_merge($participant, $notes));
+                $this->conversation->stop();
+                $data['text'] = __('panel.telegram.register_finish');
+                $result = Request::sendMessage($data);
+                break;
         }
         return $result;
     }
