@@ -84,6 +84,10 @@ class StartCommand extends UserCommand
         switch ($state) {
             case 0:
                 if ($text === '') {
+                    Request::sendMessage([
+                        'chat_id' => $chat_id,
+                        'text'    => __('panel.telegram.start_text')
+                    ]);
                     $notes['state'] = 0;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.name');
@@ -106,7 +110,7 @@ class StartCommand extends UserCommand
                 $text             = '';
             case 2:
                 $validator = Validator::make(['year' => $text], [
-                    'year' => 'date_format:Y'
+                    'year' => 'date_format:Y|before:today'
                 ]);
 
                 if ($text === '' || $validator->fails()) {
