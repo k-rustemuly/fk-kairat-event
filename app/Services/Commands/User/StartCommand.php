@@ -93,10 +93,7 @@ class StartCommand extends UserCommand
                 $notes['name'] = $text;
                 $text          = '';
         }
-        return Request::sendMessage([
-            'chat_id'       => $chat_id,
-            'text'          => __('panel.telegram.start_text'),
-        ]);
+        return $result;
     }
 
 }
