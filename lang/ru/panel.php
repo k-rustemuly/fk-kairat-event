@@ -17,5 +17,8 @@ return [
         'participants' => 'Участники',
         'registered' => 'Зарегистрировались',
         'not_registered' => 'Не закончили регистрацию',
+    ],
+    'menu' => [
+        'qr_codes' => 'QR коды',
     ]
 ];
