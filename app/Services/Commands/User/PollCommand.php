@@ -85,8 +85,9 @@ class PollCommand extends UserCommand
                 'question' => "What is the latest movie from Tom Cruise?",
                 'options'   => json_encode($options),
                 'type' => 'quiz',
+                'is_anonymous' => false,
                 'correct_option_id' => "0",
-                'open_period' => 2
+                'open_period' => 120
             ]);
         }
     }

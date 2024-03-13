@@ -20,12 +20,10 @@
 
 namespace App\Services\TelegramBots\InfoBot\Commands\System;
 
-use App\Models\User;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Illuminate\Support\Str;
 use Longman\TelegramBot\Conversation;
 
 class GenericmessageCommand extends SystemCommand
@@ -70,7 +68,24 @@ class GenericmessageCommand extends SystemCommand
     public function execute(): ServerResponse
     {
         $message = $this->getMessage();
+        if ($poll_answer = $this->getUpdate()->getPollAnswer()) {
+            $user_id         = $poll_answer->getUser()->getId();
+            $poll_option_ids = $poll_answer->getOptionIds();
 
+            $correct_answer = 0;
+
+            $text = '**Wrong Answer!**';
+
+            if ($poll_option_ids[0] === $correct_answer) {
+                $text = '**Correct Answer!**';
+            }
+
+            return Request::sendMessage([
+                'chat_id'    => $user_id,
+                'text'       => $text,
+                'parse_mode' => 'markdown',
+            ]);
+        }
         // If a conversation is busy, execute the conversation command after handling the message.
         $conversation = new Conversation(
             $message->getFrom()->getId(),
