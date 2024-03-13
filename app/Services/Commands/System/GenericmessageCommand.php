@@ -18,7 +18,7 @@
  * In this conversation-related context, we must ensure that active conversations get executed correctly.
  */
 
-namespace App\Services\TelegramBots\InfoBot\Commands\System;
+namespace App\Services\Commands\System;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
