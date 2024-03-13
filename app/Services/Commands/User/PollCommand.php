@@ -10,9 +10,9 @@ use Throwable;
 use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Poll command
  */
-class StartCommand extends UserCommand
+class PollCommand extends UserCommand
 {
 
     /**
@@ -81,7 +81,7 @@ class StartCommand extends UserCommand
             $options =  array("Mission Impossible 5","Oblivion", "Top Gun 2");
 
             return Request::sendPoll([
-                'chat_id' => $message->getFrom()->getId(),
+                'chat_id' => $chat_id,
                 'question' => "What is the latest movie from Tom Cruise?",
                 'options'   => json_encode($options),
                 'type' => 'quiz',
