@@ -14,6 +14,7 @@ use Longman\TelegramBot\Request;
 use Throwable;
 use Illuminate\Support\Facades\Validator;
 use Longman\TelegramBot\Entities\KeyboardButton;
+use Nette\Utils\Random;
 use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 
 /**
@@ -197,10 +198,10 @@ class StartCommand extends UserCommand
                             ->generate($lastQrCode->code)
                     );
                     $pdf = Pdf::loadView('invitation', compact('qrCode'))->setPaper('A4');
-                    $data['document'] = [
-                        'file' => $pdf->output(),
-                        'filename' => 'invitation.pdf'
-                    ];
+                    $fileName = Random::generate(15).$lastQrCode->id.'.pdf';
+                    $filePath = 'pdfs/' . $fileName;
+                    $pdf->save(public_path($filePath));
+                    $data['document'] = url($filePath);
                     $result = Request::sendDocument($data);
                 } else {
                     $data['text'] = __('panel.telegram.register_finish');
