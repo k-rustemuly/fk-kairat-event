@@ -3,15 +3,18 @@
 namespace App\Services\Commands\User;
 
 use App\Models\Participant;
+use App\Models\QrCode;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Throwable;
 use Illuminate\Support\Facades\Validator;
 use Longman\TelegramBot\Entities\KeyboardButton;
+use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 
 /**
  * Start command
@@ -86,14 +89,19 @@ class StartCommand extends UserCommand
         switch ($state) {
             case 0:
                 if ($text === '') {
-                    Request::sendMessage([
-                        'chat_id' => $chat_id,
-                        'text'    => __('panel.telegram.start_text')
-                    ]);
-                    $notes['state'] = 0;
-                    $this->conversation->update();
-                    $data['text'] = __('panel.telegram.name');
-                    $result = Request::sendMessage($data);
+                    if(Participant::where('telegram_id', $chat_id)->exists()) {
+                        $data['text'] = __('panel.telegram.already_exists');
+                        $result = Request::sendMessage($data);
+                    } else {
+                        Request::sendMessage([
+                            'chat_id' => $chat_id,
+                            'text'    => __('panel.telegram.start_text')
+                        ]);
+                        $notes['state'] = 0;
+                        $this->conversation->update();
+                        $data['text'] = __('panel.telegram.name');
+                        $result = Request::sendMessage($data);
+                    }
                     break;
                 }
 
@@ -174,10 +182,31 @@ class StartCommand extends UserCommand
                 $participant = [
                     'telegram_id' => $chat_id,
                 ];
-                Participant::create(array_merge($participant, $notes));
+                $lastQrCode = QrCode::whereNull('participant_id')
+                    ->orderBy('created_at', 'asc')
+                    ->first();
+                if($lastQrCode) {
+                    $participant = Participant::create(array_merge($participant, $notes));
+                    $lastQrCode->participant_id = $participant->id;
+                    $lastQrCode->save();
+
+                    $qrCode =  base64_encode(
+                        FacadesQrCode::size(500)
+                            ->color(255, 255, 255)
+                            ->backgroundColor(0, 46, 94)
+                            ->generate($lastQrCode->code)
+                    );
+                    $pdf = Pdf::loadView('invitation', compact('qrCode'))->setPaper('A4');
+                    $data['document'] = [
+                        'file' => $pdf->output(),
+                        'filename' => 'invitation.pdf'
+                    ];
+                    $result = Request::sendDocument($data);
+                } else {
+                    $data['text'] = __('panel.telegram.register_finish');
+                    $result = Request::sendMessage($data);
+                }
                 $this->conversation->stop();
-                $data['text'] = __('panel.telegram.register_finish');
-                $result = Request::sendMessage($data);
                 break;
         }
         return $result;

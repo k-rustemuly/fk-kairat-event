@@ -28,7 +28,7 @@ return [
     ],
 
     'use_migrations' => true,
-    'use_notifications' => true,
+    'use_notifications' => false,
     'use_theme_switcher' => true,
 
     'layout' => MoonShineLayout::class,
