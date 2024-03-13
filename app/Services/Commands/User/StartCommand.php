@@ -90,9 +90,12 @@ class StartCommand extends UserCommand
         switch ($state) {
             case 0:
                 if ($text === '') {
-                    if(Participant::where('telegram_id', $chat_id)->exists()) {
-                        $data['text'] = __('panel.telegram.already_exists');
-                        $result = Request::sendMessage($data);
+                    if($participant = Participant::where('telegram_id', $chat_id)->first()) {
+                        Request::sendMessage([
+                            'chat_id' => $chat_id,
+                            'text'    => __('panel.telegram.already_exists')
+                        ]);
+                        $result = $this->sendPdf(QrCode::where('participant_id', $participant->id)->first());
                     } else {
                         Request::sendMessage([
                             'chat_id' => $chat_id,
@@ -190,27 +193,31 @@ class StartCommand extends UserCommand
                     $participant = Participant::create(array_merge($participant, $notes));
                     $lastQrCode->participant_id = $participant->id;
                     $lastQrCode->save();
-
-                    $qrCode =  base64_encode(
-                        FacadesQrCode::size(500)
-                            ->color(255, 255, 255)
-                            ->backgroundColor(0, 46, 94)
-                            ->generate($lastQrCode->code)
-                    );
-                    $pdf = Pdf::loadView('invitation', compact('qrCode'))->setPaper('A4');
-                    $fileName = Random::generate(15).$lastQrCode->id.'.pdf';
-                    $filePath = 'pdfs/' . $fileName;
-                    $pdf->save(public_path($filePath));
-                    $data['document'] = url($filePath);
-                    $result = Request::sendDocument($data);
+                    $result = $this->sendPdf($lastQrCode);
                 } else {
-                    $data['text'] = __('panel.telegram.register_finish');
+                    $data['text'] = __('panel.telegram.already_exists');
                     $result = Request::sendMessage($data);
                 }
                 $this->conversation->stop();
                 break;
         }
         return $result;
+    }
+
+    public function sendPdf(QrCode $qr): ServerResponse
+    {
+        $qrCode =  base64_encode(
+            FacadesQrCode::size(500)
+                ->color(255, 255, 255)
+                ->backgroundColor(0, 46, 94)
+                ->generate($qr->code)
+        );
+        $pdf = Pdf::loadView('invitation', compact('qrCode'))->setPaper('A4');
+        $fileName = Random::generate(15).$qr->id.'.pdf';
+        $filePath = 'pdfs/' . $fileName;
+        $pdf->save(public_path($filePath));
+        $data['document'] = url($filePath);
+        return Request::sendDocument($data);
     }
 
 }
