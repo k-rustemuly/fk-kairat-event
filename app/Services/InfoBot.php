@@ -12,6 +12,7 @@ class InfoBot extends TelegramBot
      */
     public static function makeBot(): TelegramBot
     {
+        logger()->debug(now()->toString());
         return new static(
             config('telegram.bot_api_key'),
             config('telegram.bot_username'),
