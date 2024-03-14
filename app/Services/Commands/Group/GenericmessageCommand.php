@@ -50,7 +50,6 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        logger()->debug('Group generic message');
         $message = $this->getMessage();
 
         // Handle new chat members

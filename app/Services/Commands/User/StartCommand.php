@@ -79,6 +79,13 @@ class StartCommand extends UserCommand
             'reply_markup' => Keyboard::remove(['selective' => true]),
         ];
 
+        if($participant = Participant::where('telegram_id', $chat_id)->first()) {
+            Request::sendMessage([
+                'chat_id' => $chat_id,
+                'text'    => __('panel.telegram.already_exists')
+            ]);
+            return $this->sendPdf(QrCode::where('participant_id', $participant->id)->first());
+        }
         $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
         $notes = &$this->conversation->notes;
@@ -90,22 +97,14 @@ class StartCommand extends UserCommand
         switch ($state) {
             case 0:
                 if ($text === '') {
-                    if($participant = Participant::where('telegram_id', $chat_id)->first()) {
-                        Request::sendMessage([
-                            'chat_id' => $chat_id,
-                            'text'    => __('panel.telegram.already_exists')
-                        ]);
-                        $result = $this->sendPdf(QrCode::where('participant_id', $participant->id)->first());
-                    } else {
-                        Request::sendMessage([
-                            'chat_id' => $chat_id,
-                            'text'    => __('panel.telegram.start_text')
-                        ]);
-                        $notes['state'] = 0;
-                        $this->conversation->update();
-                        $data['text'] = __('panel.telegram.name');
-                        $result = Request::sendMessage($data);
-                    }
+                    Request::sendMessage([
+                        'chat_id' => $chat_id,
+                        'text'    => __('panel.telegram.start_text')
+                    ]);
+                    $notes['state'] = 0;
+                    $this->conversation->update();
+                    $data['text'] = __('panel.telegram.name');
+                    $result = Request::sendMessage($data);
                     break;
                 }
 
