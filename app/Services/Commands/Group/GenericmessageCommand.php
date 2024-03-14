@@ -50,12 +50,27 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        logger()->debug('Group generic message');
         $message = $this->getMessage();
 
         // Handle new chat members
         if ($message->getNewChatMembers()) {
+            $this->deleteThisMessage();
             return $this->getTelegram()->executeCommand('newchatmembers');
         }
         return Request::emptyResponse();
+    }
+
+    /**
+     * Delete the current message.
+     *
+     * @return ServerResponse
+     */
+    private function deleteThisMessage(): ServerResponse
+    {
+        return Request::deleteMessage([
+            'chat_id'    => $this->getMessage()->getChat()->getId(),
+            'message_id' => $this->getMessage()->getMessageId(),
+        ]);
     }
 }

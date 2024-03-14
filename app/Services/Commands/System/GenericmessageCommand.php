@@ -67,6 +67,7 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        logger()->debug('System generic message');
         $message = $this->getMessage();
         if ($poll_answer = $this->getUpdate()->getPollAnswer()) {
             $user_id         = $poll_answer->getUser()->getId();
