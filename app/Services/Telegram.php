@@ -6,7 +6,7 @@ use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Telegram as ParentTelegram;
 
-abstract class Telegram extends ParentTelegram
+class Telegram extends ParentTelegram
 {
 
     public function processUpdate(Update $update): ServerResponse
