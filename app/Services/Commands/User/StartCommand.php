@@ -111,10 +111,7 @@ class StartCommand extends UserCommand
                     break;
                 }
                 $lang = $text === 'Қазақша' ? 'kk' : 'ru';
-                UserLanguage::firstOrCreate(
-                    ['telegram_id' => $chat_id],
-                    ['language' => $lang]
-                );
+                UserLanguage::where('telegram_id', $chat_id)->update(['language' => $lang]);
                 $text          = '';
             case 1:
                 if ($text === '') {
