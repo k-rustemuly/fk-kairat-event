@@ -112,6 +112,9 @@ class StartCommand extends UserCommand
                 }
                 $lang = $text === 'Қазақша' ? 'kk' : 'ru';
                 UserLanguage::where('telegram_id', $chat_id)->update(['language' => $lang]);
+                if($lang !== app()->getLocale()) {
+                    app()->setLocale($lang);
+                }
                 $text          = '';
             case 1:
                 if ($text === '') {
