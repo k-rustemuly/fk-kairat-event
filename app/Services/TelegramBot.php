@@ -8,7 +8,6 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Telegram;
 use Throwable;
 
 abstract class TelegramBot
@@ -110,7 +109,6 @@ abstract class TelegramBot
     public function processUpdate(Update $update): void
     {
         try {
-            logger()->debug($update->getMessage()->getChat()->getId());
             dump('processUpdate: '. $update->getUpdateId());
 
             $this->telegram->processUpdate($update);
