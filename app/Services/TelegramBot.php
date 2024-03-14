@@ -110,7 +110,7 @@ abstract class TelegramBot
     public function processUpdate(Update $update): void
     {
         try {
-
+            logger()->debug($update->getMessage()->getChat()->getId());
             dump('processUpdate: '. $update->getUpdateId());
 
             $this->telegram->processUpdate($update);
