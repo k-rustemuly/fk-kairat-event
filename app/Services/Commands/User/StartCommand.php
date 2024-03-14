@@ -4,6 +4,7 @@ namespace App\Services\Commands\User;
 
 use App\Models\Participant;
 use App\Models\QrCode;
+use App\Models\UserLanguage;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Keyboard;
@@ -96,12 +97,32 @@ class StartCommand extends UserCommand
         $result = Request::emptyResponse();
         switch ($state) {
             case 0:
+                if ($text === '' || !in_array($text, ['Қазақша', 'Русский'], true)) {
+                    $notes['state'] = 0;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Қазақша', 'Русский']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = __('panel.telegram.choose_language');
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                $lang = $text === 'Қазақша' ? 'kk' : 'ru';
+                UserLanguage::firstOrCreate(
+                    ['telegram_id' => $chat_id],
+                    ['language' => $lang]
+                );
+                $text          = '';
+            case 1:
                 if ($text === '') {
                     Request::sendMessage([
                         'chat_id' => $chat_id,
                         'text'    => __('panel.telegram.start_text')
                     ]);
-                    $notes['state'] = 0;
+                    $notes['state'] = 1;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.name');
                     $result = Request::sendMessage($data);
@@ -110,9 +131,9 @@ class StartCommand extends UserCommand
 
                 $notes['name'] = $text;
                 $text          = '';
-            case 1:
+            case 2:
                 if ($text === '') {
-                    $notes['state'] = 1;
+                    $notes['state'] = 2;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.surname');
                     $result = Request::sendMessage($data);
@@ -121,13 +142,13 @@ class StartCommand extends UserCommand
 
                 $notes['surname'] = $text;
                 $text             = '';
-            case 2:
+            case 3:
                 $validator = Validator::make(['year' => $text], [
                     'year' => 'date_format:Y|before:today'
                 ]);
 
                 if ($text === '' || $validator->fails()) {
-                    $notes['state'] = 2;
+                    $notes['state'] = 3;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.birth_year');
                     $result = Request::sendMessage($data);
@@ -136,9 +157,9 @@ class StartCommand extends UserCommand
 
                 $notes['birth_year'] = $text;
                 $text             = '';
-            case 3:
+            case 4:
                 if ($message->getContact() === null) {
-                    $notes['state'] = 3;
+                    $notes['state'] = 4;
                     $this->conversation->update();
 
                     $data['reply_markup'] = (new Keyboard(
@@ -159,9 +180,9 @@ class StartCommand extends UserCommand
                 $notes['phone_number'] = $message->getContact()->getPhoneNumber();
                 $text             = '';
 
-            case 4:
+            case 5:
                 if ($text === '' || !in_array($text, ['✔', '✖'], true)) {
-                    $notes['state'] = 4;
+                    $notes['state'] = 5;
                     $this->conversation->update();
 
                     $data['reply_markup'] = (new Keyboard(['✔', '✖']))
@@ -179,7 +200,7 @@ class StartCommand extends UserCommand
 
                 $notes['is_active'] = $text === '✔';
                 $text          = '';
-            case 5:
+            case 6:
                 $this->conversation->update();
                 unset($notes['state']);
                 $participant = [
