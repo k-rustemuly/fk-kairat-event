@@ -122,6 +122,10 @@ class StartCommand extends UserCommand
                         'chat_id' => $chat_id,
                         'text'    => __('panel.telegram.start_text')
                     ]);
+                    Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => url(app()->getLocale().'/what_your_name.png')
+                    ]);
                     $notes['state'] = 1;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.name');
