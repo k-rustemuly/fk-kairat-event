@@ -122,10 +122,9 @@ class StartCommand extends UserCommand
                         'chat_id' => $chat_id,
                         'text'    => __('panel.telegram.start_text')
                     ]);
-                    logger()->debug(url(app()->getLocale().'/what_your_name.png'));
                     Request::sendPhoto([
                         'chat_id' => $chat_id,
-                        'photo' => url(app()->getLocale().'/what_your_name.png')
+                        'photo' => $this->getImageUrl('what_your_name')
                     ]);
                     $notes['state'] = 1;
                     $this->conversation->update();
@@ -164,6 +163,10 @@ class StartCommand extends UserCommand
                 $text             = '';
             case 4:
                 if ($message->getContact() === null) {
+                    Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => $this->getImageUrl('phone_number')
+                    ]);
                     $notes['state'] = 4;
                     $this->conversation->update();
 
@@ -187,6 +190,11 @@ class StartCommand extends UserCommand
 
             case 5:
                 if ($text === '' || !in_array($text, ['✔', '✖'], true)) {
+
+                    Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => $this->getImageUrl('active')
+                    ]);
                     $notes['state'] = 5;
                     $this->conversation->update();
 
@@ -219,6 +227,10 @@ class StartCommand extends UserCommand
                     $lastQrCode->participant_id = $participant->id;
                     $lastQrCode->save();
                     $result = $this->sendPdf($lastQrCode);
+                    $result = Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => $this->getImageUrl('invite')
+                    ]);
                 } else {
                     $data['text'] = __('panel.telegram.already_exists');
                     $result = Request::sendMessage($data);
@@ -245,4 +257,8 @@ class StartCommand extends UserCommand
         return Request::sendDocument($data);
     }
 
+    public function getImageUrl(string $name): string
+    {
+        return url('images/'.app()->getLocale().'/'.$name.'.png');
+    }
 }
