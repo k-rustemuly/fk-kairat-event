@@ -18,7 +18,7 @@ use Intervention\Image\ImageManager;
 
 Route::get('/', function () {
     $fileName = public_path('images/test.png');
-    QrCode::format('png')->size(924)->generate('Your QR Code Data Here', $fileName);
+    QrCode::format('png')->size(922)->generate('Your QR Code Data Here', $fileName);
     $manager = new ImageManager(
         new Intervention\Image\Drivers\Gd\Driver()
     );
