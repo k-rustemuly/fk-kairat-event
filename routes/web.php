@@ -23,7 +23,7 @@ Route::get('/', function () {
         new Intervention\Image\Drivers\Gd\Driver()
     );
     $manager->read(public_path('images/ru/invite.png'))
-        ->place(public_path('images/test.png'), 'bottom-left', 220, 1480)
+        ->place(public_path('images/test.png'), 'bottom-left', 220, 134)
         ->toPng()
         ->save($fileName);
     return response()->file($fileName)->deleteFileAfterSend();
