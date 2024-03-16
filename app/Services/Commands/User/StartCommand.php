@@ -124,12 +124,16 @@ class StartCommand extends UserCommand
                     ]);
                     Request::sendPhoto([
                         'chat_id' => $chat_id,
-                        'photo' => $this->getImageUrl('what_your_name')
+                        'photo' => $this->getImageUrl('hi')
                     ]);
                     $notes['state'] = 1;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.name');
-                    $result = Request::sendMessage($data);
+                    // $result = Request::sendMessage($data);
+                    $result = Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => $this->getImageUrl('what_your_name')
+                    ]);
                     break;
                 }
 
@@ -155,7 +159,11 @@ class StartCommand extends UserCommand
                     $notes['state'] = 3;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.birth_year');
-                    $result = Request::sendMessage($data);
+                    // $result = Request::sendMessage($data);
+                    $result = Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => $this->getImageUrl('birth_year')
+                    ]);
                     break;
                 }
 
@@ -191,10 +199,6 @@ class StartCommand extends UserCommand
             case 5:
                 if ($text === '' || !in_array($text, ['✔', '✖'], true)) {
 
-                    Request::sendPhoto([
-                        'chat_id' => $chat_id,
-                        'photo' => $this->getImageUrl('active')
-                    ]);
                     $notes['state'] = 5;
                     $this->conversation->update();
 
@@ -207,7 +211,15 @@ class StartCommand extends UserCommand
                     if ($text !== '') {
                         $data['text'] = __('panel.telegram.choose');
                     }
-                    $result = Request::sendMessage($data);
+                    // $result = Request::sendMessage($data);
+                    $result = Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => $this->getImageUrl('active'),
+                        'reply_markup' => (new Keyboard(['✔', '✖']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true)
+                    ]);
                     break;
                 }
 
