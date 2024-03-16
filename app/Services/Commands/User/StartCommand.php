@@ -159,11 +159,11 @@ class StartCommand extends UserCommand
                     $notes['state'] = 3;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.birth_year');
-                    // $result = Request::sendMessage($data);
-                    $result = Request::sendPhoto([
+                    Request::sendPhoto([
                         'chat_id' => $chat_id,
                         'photo' => $this->getImageUrl('birth_year')
                     ]);
+                    $result = Request::sendMessage($data);
                     break;
                 }
 
@@ -171,25 +171,27 @@ class StartCommand extends UserCommand
                 $text             = '';
             case 4:
                 if ($message->getContact() === null) {
-                    Request::sendPhoto([
-                        'chat_id' => $chat_id,
-                        'photo' => $this->getImageUrl('phone_number')
-                    ]);
+
                     $notes['state'] = 4;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = (new Keyboard(
-                        (new KeyboardButton(__('panel.telegram.share_contact')))->setRequestContact(true)
-                    ))
-                        ->setOneTimeKeyboard(true)
-                        ->setResizeKeyboard(true)
-                        ->setSelective(true);
+                    // $data['reply_markup'] = ;
 
                     $data['text'] = __('panel.telegram.phone_number');
                     if ($text !== '') {
                         $data['text'] = __('panel.telegram.share_contact_please');
                     }
-                    $result = Request::sendMessage($data);
+                    // $result = Request::sendMessage($data);
+                    $result = Request::sendPhoto([
+                        'chat_id' => $chat_id,
+                        'photo' => $this->getImageUrl('phone_number'),
+                        'reply_markup' => (new Keyboard(
+                            (new KeyboardButton(__('panel.telegram.share_contact')))->setRequestContact(true)
+                        ))
+                            ->setOneTimeKeyboard(true)
+                            ->setResizeKeyboard(true)
+                            ->setSelective(true)
+                    ]);
                     break;
                 }
 
@@ -216,9 +218,9 @@ class StartCommand extends UserCommand
                         'chat_id' => $chat_id,
                         'photo' => $this->getImageUrl('active'),
                         'reply_markup' => (new Keyboard(['✔', '✖']))
-                        ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true)
+                            ->setResizeKeyboard(true)
+                            ->setOneTimeKeyboard(true)
+                            ->setSelective(true)
                     ]);
                     break;
                 }
