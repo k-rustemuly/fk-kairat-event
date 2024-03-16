@@ -217,7 +217,7 @@ class StartCommand extends UserCommand
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
                         'photo' => $this->getImageUrl('active'),
-                        'reply_markup' => (new Keyboard(['✔', '✖']))
+                        'reply_markup' => (new Keyboard(['✅', '❌']))
                             ->setResizeKeyboard(true)
                             ->setOneTimeKeyboard(true)
                             ->setSelective(true)
