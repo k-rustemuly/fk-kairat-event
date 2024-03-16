@@ -22,9 +22,11 @@ Route::get('/', function () {
     $manager = new ImageManager(
         new Intervention\Image\Drivers\Gd\Driver()
     );
-    $image = $manager->read(public_path('images/ru/invite.png'));
-    $image->place(public_path('images/test.png'), 'bottom-left', 10, 20);
-    return response()->file($image->toPng()->save($fileName))->deleteFileAfterSend();
+    $manager->read(public_path('images/ru/invite.png'))
+        ->place(public_path('images/test.png'), 'bottom-left', 10, 20)
+        ->toPng()
+        ->save($fileName);
+    return response()->file($fileName)->deleteFileAfterSend();
 });
 
 Route::group(['excluded_middleware' => ['web']], function () {
