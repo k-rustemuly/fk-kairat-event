@@ -81,11 +81,8 @@ class StartCommand extends UserCommand
         ];
 
         if($participant = Participant::where('telegram_id', $chat_id)->first()) {
-            Request::sendMessage([
-                'chat_id' => $chat_id,
-                'text'    => __('panel.telegram.already_exists')
-            ]);
-            return $this->sendPdf(QrCode::where('participant_id', $participant->id)->first());
+            $data['text'] = __('panel.telegram.already_exists');
+            return Request::sendMessage($data);
         }
         $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
@@ -239,7 +236,7 @@ class StartCommand extends UserCommand
                     $result = $this->sendPdf($lastQrCode);
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
-                        'photo' => $this->getImageUrl('invite')
+                        'photo' => route('qrCode', ['qrCode' => $lastQrCode->id, 'lang' => app()->getLocale()])
                     ]);
                 } else {
                     $data['text'] = __('panel.telegram.already_exists');

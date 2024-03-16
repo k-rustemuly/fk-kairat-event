@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TelegrammController;
+use App\Models\QrCode as ModelsQrCode;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Intervention\Image\ImageManager;
@@ -16,18 +17,19 @@ use Intervention\Image\ImageManager;
 |
 */
 
-Route::get('/', function () {
-    $fileName = public_path('images/test.png');
-    QrCode::format('png')->size(922)->generate('Your QR Code Data Here', $fileName);
+Route::get('/qr/{qrCode}/{lang}', function (ModelsQrCode $qrCode, string $lang) {
+    $code = $qrCode->code;
+    $fileName = public_path('images/'.$code.'.png');
+    QrCode::format('png')->size(922)->generate($code, $fileName);
     $manager = new ImageManager(
         new Intervention\Image\Drivers\Gd\Driver()
     );
-    $manager->read(public_path('images/ru/invite.png'))
+    $manager->read(public_path('images/'.$lang.'/invite.png'))
         ->place(public_path('images/test.png'), 'bottom-left', 220, 134)
         ->toPng()
         ->save($fileName);
     return response()->file($fileName)->deleteFileAfterSend();
-});
+})->name('qrCode');
 
 Route::group(['excluded_middleware' => ['web']], function () {
     Route::post('/webhook/telegram', [TelegrammController::class, 'webhook'])->name('webhook.telegram');
