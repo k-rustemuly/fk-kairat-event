@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\TelegrammController;
 use Illuminate\Support\Facades\Route;
-use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Intervention\Image\ImageManager;
 
@@ -18,13 +17,14 @@ use Intervention\Image\ImageManager;
 */
 
 Route::get('/', function () {
-    $qrCode = QrCode::format('png')->size(200)->generate('Your QR Code Data Here', public_path('images/test.png'));
+    $fileName = public_path('images/test.png');
+    QrCode::format('png')->size(200)->generate('Your QR Code Data Here', $fileName);
     $manager = new ImageManager(
         new Intervention\Image\Drivers\Gd\Driver()
     );
     $image = $manager->read(public_path('images/ru/invite.png'));
     $image->place(public_path('images/test.png'), 'bottom-left', 10, 20);
-    return response()->file($image->toPng());
+    return response()->file($image->toPng()->save($fileName))->deleteFileAfterSend();
 });
 
 Route::group(['excluded_middleware' => ['web']], function () {
