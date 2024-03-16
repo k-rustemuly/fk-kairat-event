@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Pages;
 
 use App\Models\Conversation;
+use App\Models\Participant;
 use MoonShine\Metrics\DonutChartMetric;
 use MoonShine\Pages\Page;
 
@@ -27,7 +28,7 @@ class Dashboard extends Page
 		return [
             DonutChartMetric::make(__('panel.messages.participants'))
                 ->values([
-                    __('panel.messages.registered') => Conversation::registered()->count(),
+                    __('panel.messages.registered') => Participant::count(),
                     __('panel.messages.not_registered') => Conversation::notRegistered()->count()
                 ])
         ];
