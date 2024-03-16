@@ -199,12 +199,12 @@ class StartCommand extends UserCommand
                 $text             = '';
 
             case 5:
-                if ($text === '' || !in_array($text, ['✔', '✖'], true)) {
+                if ($text === '' || !in_array($text, ['✅', '❌'], true)) {
 
                     $notes['state'] = 5;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = (new Keyboard(['✔', '✖']))
+                    $data['reply_markup'] = (new Keyboard(['✅', '❌']))
                         ->setResizeKeyboard(true)
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);

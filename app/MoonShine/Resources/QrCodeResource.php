@@ -49,7 +49,7 @@ class QrCodeResource extends ModelResource
 
     public function import(): ?ImportHandler
     {
-        return ImportHandler::make(__('moonshine::ui.import'));
+        return ImportHandler::make(__('moonshine::ui.import'))->delimiter(';');
     }
 
 }
