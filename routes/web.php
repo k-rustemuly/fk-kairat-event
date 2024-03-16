@@ -18,12 +18,12 @@ use Intervention\Image\ImageManager;
 
 Route::get('/', function () {
     $fileName = public_path('images/test.png');
-    QrCode::format('png')->size(200)->generate('Your QR Code Data Here', $fileName);
+    QrCode::format('png')->size(900)->generate('Your QR Code Data Here', $fileName);
     $manager = new ImageManager(
         new Intervention\Image\Drivers\Gd\Driver()
     );
     $manager->read(public_path('images/ru/invite.png'))
-        ->place(public_path('images/test.png'), 'bottom-left', 10, 20)
+        ->place(public_path('images/test.png'), 'bottom-left', 220, 1480)
         ->toPng()
         ->save($fileName);
     return response()->file($fileName)->deleteFileAfterSend();
