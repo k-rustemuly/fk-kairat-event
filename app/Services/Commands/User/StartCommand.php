@@ -225,7 +225,7 @@ class StartCommand extends UserCommand
                     break;
                 }
 
-                $notes['is_active'] = $text === '✔';
+                $notes['is_active'] = $text === '✅';
                 $text          = '';
             case 6:
                 $this->conversation->update();
