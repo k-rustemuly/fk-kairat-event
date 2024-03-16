@@ -118,10 +118,10 @@ class StartCommand extends UserCommand
                 $text          = '';
             case 1:
                 if ($text === '') {
-                    Request::sendMessage([
-                        'chat_id' => $chat_id,
-                        'text'    => __('panel.telegram.start_text')
-                    ]);
+                    // Request::sendMessage([
+                    //     'chat_id' => $chat_id,
+                    //     'text'    => __('panel.telegram.start_text')
+                    // ]);
                     Request::sendPhoto([
                         'chat_id' => $chat_id,
                         'photo' => $this->getImageUrl('hi')
@@ -132,7 +132,8 @@ class StartCommand extends UserCommand
                     // $result = Request::sendMessage($data);
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
-                        'photo' => $this->getImageUrl('what_your_name')
+                        'photo' => $this->getImageUrl('what_your_name'),
+                        'reply_markup' => Keyboard::remove(['selective' => true]),
                     ]);
                     break;
                 }
@@ -204,15 +205,10 @@ class StartCommand extends UserCommand
                     $notes['state'] = 5;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = (new Keyboard(['✅', '❌']))
-                        ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
-
-                    $data['text'] = __('panel.telegram.active_confirm');
-                    if ($text !== '') {
-                        $data['text'] = __('panel.telegram.choose');
-                    }
+                    // $data['text'] = __('panel.telegram.active_confirm');
+                    // if ($text !== '') {
+                    //     $data['text'] = __('panel.telegram.choose');
+                    // }
                     // $result = Request::sendMessage($data);
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
