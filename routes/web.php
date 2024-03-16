@@ -25,7 +25,7 @@ Route::get('/qr/{qrCode}/{lang}', function (ModelsQrCode $qrCode, string $lang) 
         new Intervention\Image\Drivers\Gd\Driver()
     );
     $manager->read(public_path('images/'.$lang.'/invite.png'))
-        ->place(public_path($fileName), 'bottom-left', 220, 134)
+        ->place($fileName, 'bottom-left', 220, 134)
         ->toPng()
         ->save($fileName);
     return response()->file($fileName)->deleteFileAfterSend();
