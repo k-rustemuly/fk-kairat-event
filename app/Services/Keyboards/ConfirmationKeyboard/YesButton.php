@@ -2,14 +2,11 @@
 
 namespace App\Services\Keyboards\ConfirmationKeyboard;
 
-use App\Models\Participant;
-use App\Models\QrCode;
 use App\Services\Entities\TelegramButton;
-use App\Services\InfoBot;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\CallbackQuery;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
 
 class YesButton extends TelegramButton
 {
@@ -31,27 +28,12 @@ class YesButton extends TelegramButton
         $notes['is_active'] = true;
         $notes['state'] = 5;
         $conversation->update();
-        unset($notes['state']);
-        $participant = [
-            'telegram_id' => $chat_id,
+        $data = [
+            'chat_id'      => $chat_id,
+            'reply_markup' => Keyboard::remove(['selective' => true]),
         ];
-        $lastQrCode = QrCode::whereNull('participant_id')
-            ->orderBy('created_at', 'asc')
-            ->first();
-        if($lastQrCode) {
-            $participant = Participant::create(array_merge($participant, $notes));
-            $lastQrCode->participant_id = $participant->id;
-            $lastQrCode->save();
-            $result = Request::sendPhoto([
-                'chat_id' => $chat_id,
-                'photo' => route('qrCode', ['qrCode' => $lastQrCode->id, 'lang' => app()->getLocale()])
-            ]);
-        } else {
-            $data['text'] = __('panel.telegram.registration_closed');
-            $result = Request::sendMessage($data);
-        }
         $conversation->stop();
-        return $result;
+        return ConfirmationKeyboard::finish($data, $notes);
     }
 
 }

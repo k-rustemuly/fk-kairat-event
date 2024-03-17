@@ -3,9 +3,9 @@
 namespace App\Services\Keyboards\ConfirmationKeyboard;
 
 use App\Services\Entities\TelegramButton;
-use App\Services\InfoBot;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\CallbackQuery;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 
 class NoButton extends TelegramButton
@@ -28,8 +28,12 @@ class NoButton extends TelegramButton
         $notes['is_active'] = false;
         $notes['state'] = 5;
         $conversation->update();
-        $telegram = InfoBot::makeBot()->telegram;
-        return $telegram->executeCommand('start');
+        $data = [
+            'chat_id'      => $chat_id,
+            'reply_markup' => Keyboard::remove(['selective' => true]),
+        ];
+        $conversation->stop();
+        return ConfirmationKeyboard::finish($data, $notes);
     }
 
 }
