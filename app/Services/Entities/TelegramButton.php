@@ -23,10 +23,8 @@ abstract class TelegramButton implements BotFunctionInterface
     protected string $buttonText = '';
 
     public function __construct(
-        protected string $value = '', Telegram $telegram
-    ) {
-        $this->telegram = $telegram;
-    }
+        protected string $value = ''
+    ) {}
 
     abstract public function handle(CallbackQuery $query): ServerResponse;
 

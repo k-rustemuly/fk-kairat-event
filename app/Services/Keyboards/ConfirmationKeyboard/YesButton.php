@@ -29,8 +29,8 @@ class YesButton extends TelegramButton
         $notes['is_active'] = true;
         $notes['state'] = 5;
         $conversation->update();
-        // $telegram = InfoBot::makeBot()->telegram;
-        return $this->telegram->executeCommand('start');
+        $telegram = InfoBot::makeBot()->telegram;
+        return $telegram->executeCommand('start');
     }
 
 }
