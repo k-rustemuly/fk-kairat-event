@@ -74,7 +74,6 @@ class StartCommand extends UserCommand
         $user    = $message->getFrom();
         $text    = str($message->getText(true))->squish()->value();
         $chat_id = $chat->getId();
-        $user_id = $user->getId();
 
         $data = [
             'chat_id'      => $chat_id,
@@ -85,7 +84,7 @@ class StartCommand extends UserCommand
             $data['text'] = __('panel.telegram.already_exists');
             return Request::sendMessage($data);
         }
-        $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
+        $this->conversation = new Conversation($chat_id, $chat_id, $this->getName());
 
         $notes = &$this->conversation->notes;
         !is_array($notes) && $notes = [];

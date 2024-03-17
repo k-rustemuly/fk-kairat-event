@@ -12,7 +12,7 @@ use Throwable;
 
 abstract class TelegramBot
 {
-    protected Telegram $telegram;
+    public Telegram $telegram;
 
     /**
      * @throws TelegramException
