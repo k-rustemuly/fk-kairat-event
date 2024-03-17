@@ -11,9 +11,7 @@ class ConfirmationKeyboard extends TelegramKeyboard
     public function buildKeyboard(string $value = ''): Keyboard
     {
         return new InlineKeyboard(
-            [
-                YesButton::make()->setText('Yes'),
-            ]
+            [$this->inlineButton(YesButton::make()->setText('Yes'))]
         );
     }
 }
