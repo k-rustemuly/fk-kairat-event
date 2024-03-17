@@ -2,10 +2,13 @@
 
 namespace App\Services\Keyboards;
 
+use App\Services\Keyboards\ConfirmationKeyboard\ConfirmationKeyboard;
+
 class AppKeyboardList
 {
     private array $keyboards = [
         StartKeyboard::class,
+        ConfirmationKeyboard::class
     ];
 
     /**
