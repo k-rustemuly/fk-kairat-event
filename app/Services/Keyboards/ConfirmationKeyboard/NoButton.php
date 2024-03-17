@@ -32,8 +32,9 @@ class NoButton extends TelegramButton
             'chat_id'      => $chat_id,
             'reply_markup' => Keyboard::remove(['selective' => true]),
         ];
+        $result = ConfirmationKeyboard::finish($data, $notes);
         $conversation->stop();
-        return ConfirmationKeyboard::finish($data, $notes);
+        return $result;
     }
 
 }
