@@ -15,6 +15,8 @@ return [
         'already_exists' => 'Сіз әлдеқашан тіркелгенсіз!',
         'choose_language' => 'Выберите язык! Тілді таңдаңыз!',
         'registration_closed' => 'Мест не осталось! Извините',
+        'yes' => 'Иә',
+        'no' => 'Жоқ',
     ],
     'messages' => [
         'participants' => 'Қатысушылар',

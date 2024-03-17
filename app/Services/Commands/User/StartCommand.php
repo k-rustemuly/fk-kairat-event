@@ -235,7 +235,7 @@ class StartCommand extends UserCommand
                     $participant = Participant::create(array_merge($participant, $notes));
                     $lastQrCode->participant_id = $participant->id;
                     $lastQrCode->save();
-                    $result = $this->sendPdf($lastQrCode);
+                    // $result = $this->sendPdf($lastQrCode);
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
                         'photo' => route('qrCode', ['qrCode' => $lastQrCode->id, 'lang' => app()->getLocale()])
@@ -250,21 +250,21 @@ class StartCommand extends UserCommand
         return $result;
     }
 
-    public function sendPdf(QrCode $qr): ServerResponse
-    {
-        $qrCode =  base64_encode(
-            FacadesQrCode::size(500)
-                ->color(255, 255, 255)
-                ->backgroundColor(0, 46, 94)
-                ->generate($qr->code)
-        );
-        $pdf = Pdf::loadView('invitation', compact('qrCode'))->setPaper('A4');
-        $fileName = Random::generate(15).$qr->id.'.pdf';
-        $filePath = 'pdfs/' . $fileName;
-        $pdf->save(public_path($filePath));
-        $data['document'] = url($filePath);
-        return Request::sendDocument($data);
-    }
+    // public function sendPdf(QrCode $qr): ServerResponse
+    // {
+    //     $qrCode =  base64_encode(
+    //         FacadesQrCode::size(500)
+    //             ->color(255, 255, 255)
+    //             ->backgroundColor(0, 46, 94)
+    //             ->generate($qr->code)
+    //     );
+    //     $pdf = Pdf::loadView('invitation', compact('qrCode'))->setPaper('A4');
+    //     $fileName = Random::generate(15).$qr->id.'.pdf';
+    //     $filePath = 'pdfs/' . $fileName;
+    //     $pdf->save(public_path($filePath));
+    //     $data['document'] = url($filePath);
+    //     return Request::sendDocument($data);
+    // }
 
     public function getImageUrl(string $name): string
     {

@@ -2,6 +2,7 @@
 
 namespace App\Services\Entities;
 
+use App\Support\Traits\Makeable;
 use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Telegram;
@@ -13,6 +14,8 @@ use Longman\TelegramBot\Telegram;
  */
 abstract class TelegramButton implements BotFunctionInterface
 {
+    use Makeable;
+
     protected ?Telegram $telegram;
 
     protected string $buttonKey = '';
@@ -24,6 +27,12 @@ abstract class TelegramButton implements BotFunctionInterface
     ) {}
 
     abstract public function handle(CallbackQuery $query): ServerResponse;
+
+    public function setText(string $buttonText): self
+    {
+        $this->buttonText = $buttonText;
+        return $this;
+    }
 
     public function getValue(CallbackQuery $query): string
     {
