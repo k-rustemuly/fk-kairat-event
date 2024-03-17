@@ -4,6 +4,7 @@ namespace App\Services\Keyboards\ConfirmationKeyboard;
 
 use App\Models\Participant;
 use App\Models\QrCode;
+use App\Models\UserLanguage;
 use App\Services\Keyboards\TelegramKeyboard;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\Keyboard;
@@ -22,6 +23,7 @@ class ConfirmationKeyboard extends TelegramKeyboard
 
     public static function finish(array $data, array $notes): ServerResponse
     {
+        app()->setLocale(UserLanguage::where('telegram_id', $data['chat_id'])->first()->language);
         unset($notes['state']);
         $participant = [
             'telegram_id' => $data['chat_id'],
