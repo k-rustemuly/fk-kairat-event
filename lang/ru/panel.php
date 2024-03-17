@@ -14,6 +14,7 @@ return [
         'register_finish' => 'Спасибо за регистрацию',
         'already_exists' => 'Вы уже прошли регистрацию!',
         'choose_language' => 'Выберите язык! Тілді таңдаңыз!',
+        'registration_closed' => 'Мест не осталось! Извините',
     ],
     'messages' => [
         'participants' => 'Участники',

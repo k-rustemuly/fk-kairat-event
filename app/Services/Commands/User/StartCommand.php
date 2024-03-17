@@ -5,6 +5,7 @@ namespace App\Services\Commands\User;
 use App\Models\Participant;
 use App\Models\QrCode;
 use App\Models\UserLanguage;
+use App\Services\Keyboards\ConfirmationKeyboard\ConfirmationKeyboard;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Keyboard;
@@ -210,10 +211,11 @@ class StartCommand extends UserCommand
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
                         'photo' => $this->getImageUrl('active'),
-                        'reply_markup' => (new Keyboard(['✅', '❌']))
-                            ->setResizeKeyboard(true)
-                            ->setOneTimeKeyboard(true)
-                            ->setSelective(true)
+                        'reply_markup' => ConfirmationKeyboard::make()->getKeyboard()
+                        // 'reply_markup' => (new Keyboard(['✅', '❌']))
+                        //     ->setResizeKeyboard(true)
+                        //     ->setOneTimeKeyboard(true)
+                        //     ->setSelective(true)
                     ]);
                     break;
                 }
@@ -239,7 +241,7 @@ class StartCommand extends UserCommand
                         'photo' => route('qrCode', ['qrCode' => $lastQrCode->id, 'lang' => app()->getLocale()])
                     ]);
                 } else {
-                    $data['text'] = __('panel.telegram.already_exists');
+                    $data['text'] = __('panel.telegram.registration_closed');
                     $result = Request::sendMessage($data);
                 }
                 $this->conversation->stop();
