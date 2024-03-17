@@ -123,12 +123,12 @@ class StartCommand extends UserCommand
                     $notes['state'] = 1;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.name');
-                    // $result = Request::sendMessage($data);
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
                         'photo' => $this->getImageUrl('what_your_name'),
                         'reply_markup' => Keyboard::remove(['selective' => true]),
                     ]);
+                    Request::sendMessage($data);
                     break;
                 }
 
