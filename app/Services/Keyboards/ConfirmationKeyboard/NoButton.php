@@ -21,7 +21,6 @@ class NoButton extends TelegramButton
     {
         $message = $query->getMessage();
         $chat    = $message->getChat();
-        $user    = $message->getFrom();
         $chat_id = $chat->getId();
         $conversation = new Conversation($chat_id, $chat_id, 'start');
 

@@ -16,8 +16,6 @@ use Longman\TelegramBot\Request;
 use Throwable;
 use Illuminate\Support\Facades\Validator;
 use Longman\TelegramBot\Entities\KeyboardButton;
-use Nette\Utils\Random;
-use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 
 /**
  * Start command
@@ -71,7 +69,6 @@ class StartCommand extends UserCommand
     {
         $message = $this->getMessage();
         $chat    = $message->getChat();
-        $user    = $message->getFrom();
         $text    = str($message->getText(true))->squish()->value();
         $chat_id = $chat->getId();
 
