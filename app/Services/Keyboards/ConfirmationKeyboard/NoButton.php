@@ -24,6 +24,10 @@ class NoButton extends TelegramButton
         $message = $query->getMessage();
         $chat    = $message->getChat();
         $chat_id = $chat->getId();
+        $data = [
+            'chat_id'      => $chat_id,
+            'reply_markup' => Keyboard::remove(['selective' => true]),
+        ];
         if(Participant::where('telegram_id', $chat_id)->first()) {
             $data['text'] = __('panel.telegram.already_exists');
             return Request::sendMessage($data);
@@ -34,10 +38,7 @@ class NoButton extends TelegramButton
         $notes['is_active'] = false;
         $notes['state'] = 5;
         $conversation->update();
-        $data = [
-            'chat_id'      => $chat_id,
-            'reply_markup' => Keyboard::remove(['selective' => true]),
-        ];
+
         $result = ConfirmationKeyboard::finish($data, $notes);
         $conversation->stop();
         return $result;
