@@ -78,6 +78,11 @@ class StartCommand extends UserCommand
         ];
 
         if($participant = Participant::where('telegram_id', $chat_id)->first()) {
+            Request::sendPhoto(
+                array_merge($data, [
+                    'photo' => route('qrCode', ['qrCode' => $participant->qrCode->id, 'lang' => app()->getLocale()])
+                ])
+            );
             $data['text'] = __('panel.telegram.already_exists');
             return Request::sendMessage($data);
         }
@@ -123,12 +128,12 @@ class StartCommand extends UserCommand
                     $notes['state'] = 1;
                     $this->conversation->update();
                     $data['text'] = __('panel.telegram.name');
-                    $result = Request::sendPhoto([
-                        'chat_id' => $chat_id,
-                        'photo' => $this->getImageUrl('what_your_name'),
-                        'reply_markup' => Keyboard::remove(['selective' => true]),
-                    ]);
-                    Request::sendMessage($data);
+                    // $result = Request::sendPhoto([
+                    //     'chat_id' => $chat_id,
+                    //     'photo' => $this->getImageUrl('what_your_name'),
+                    //     'reply_markup' => Keyboard::remove(['selective' => true]),
+                    // ]);
+                    $result = Request::sendMessage($data);
                     break;
                 }
 

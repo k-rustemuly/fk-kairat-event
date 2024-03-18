@@ -22,4 +22,9 @@ class Participant extends Model
         'phone_number',
         'is_active',
     ];
+
+    public function qrCode()
+    {
+        return $this->hasOne(QrCode::class);
+    }
 }
