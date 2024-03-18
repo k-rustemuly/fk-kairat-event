@@ -34,7 +34,7 @@ class NoButton extends TelegramButton
                     'photo' => route('qrCode', ['qrCode' => $participant->qrCode->id, 'lang' => $participant->settings->language])
                 ])
             );
-            $data['text'] = __('panel.telegram.already_exists');
+            $data['text'] = __('panel.telegram.already_exists', locale: $participant->settings->language);
             return Request::sendMessage($data);
         }
         $conversation = new Conversation($chat_id, $chat_id, 'start');
