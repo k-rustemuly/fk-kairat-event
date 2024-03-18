@@ -31,7 +31,7 @@ class NoButton extends TelegramButton
         if($participant = Participant::where('telegram_id', $chat_id)->first()) {
             Request::sendPhoto(
                 array_merge($data, [
-                    'photo' => route('qrCode', ['qrCode' => $participant->qrCode->id, 'lang' => app()->getLocale()])
+                    'photo' => route('qrCode', ['qrCode' => $participant->qrCode->id, 'lang' => $participant->settings->language])
                 ])
             );
             $data['text'] = __('panel.telegram.already_exists');

@@ -27,4 +27,9 @@ class Participant extends Model
     {
         return $this->hasOne(QrCode::class);
     }
+
+    public function settings()
+    {
+        return $this->hasOne(UserLanguage::class, 'telegram_id', 'telegram_id');
+    }
 }
