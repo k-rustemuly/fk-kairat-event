@@ -28,7 +28,12 @@ class YesButton extends TelegramButton
             'chat_id'      => $chat_id,
             'reply_markup' => Keyboard::remove(['selective' => true]),
         ];
-        if(Participant::where('telegram_id', $chat_id)->first()) {
+        if($participant = Participant::where('telegram_id', $chat_id)->first()) {
+            Request::sendPhoto(
+                array_merge($data, [
+                    'photo' => route('qrCode', ['qrCode' => $participant->qrCode->id, 'lang' => app()->getLocale()])
+                ])
+            );
             $data['text'] = __('panel.telegram.already_exists');
             return Request::sendMessage($data);
         }
