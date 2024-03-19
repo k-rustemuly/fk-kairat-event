@@ -55,7 +55,7 @@ Route::get('/tg', function () {
 
 Route::post('/telegram/user/exists', function (Request $request) {
     $auth = $request->all()['data'];
-    logger()->debug(implode(',', $auth));
+    logger()->debug( $auth);
     try {
         $tgWebValid = new TgWebValid(config('telegram.bot_api_key'), true);
         $initData = $tgWebValid->bot()->validateInitData($auth);
