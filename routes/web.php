@@ -55,6 +55,7 @@ Route::get('/tg', function () {
 
 Route::post('/telegram/user/exists', function (Request $request) {
     $auth = $request->all()['data'];
+    logger()->debug(implode($auth));
     try {
         $tgWebValid = new TgWebValid(config('telegram.bot_api_key'), true);
         $initData = $tgWebValid->bot()->validateInitData($auth);
@@ -71,7 +72,7 @@ Route::post('/telegram/user/exists', function (Request $request) {
             return redirect()->route('moonshine.index');
         }
     } catch (ValidationException|BotException|Exception $e) {
-
+        logger()->error($e->getMessage());
     }
     logger()->error('aaa');
     return redirect()->back()->with('error', 'error');
