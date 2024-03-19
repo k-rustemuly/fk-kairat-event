@@ -105,6 +105,7 @@ class StartCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = __('panel.telegram.choose_language');
+                    $data['text'] = 'aaaa?';
                     $result = Request::sendMessage($data);
                     break;
                 }
