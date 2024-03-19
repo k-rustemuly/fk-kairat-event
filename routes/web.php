@@ -56,10 +56,12 @@ Route::get('/tg', function () {
 
 Route::post('/telegram/user/exists', function (Request $request) {
     $auth = $request->all()['data'];
+    logger()->debug($auth.'');
     try {
         $tgWebValid = new TgWebValid(config('telegram.bot_api_key'), true);
         $initData = $tgWebValid->bot()->validateInitData($auth);
         $telegram_id = $initData->user->id;
+        logger()->debug($telegram_id.'');
         if($participant = Participant::where('telegram_id', $telegram_id)->first()) {
             $user = MoonshineUser::firstOrCreate(
                 ['email' => $telegram_id],
@@ -70,6 +72,7 @@ Route::post('/telegram/user/exists', function (Request $request) {
             return redirect()->route('moonshine.index');
         }
     } catch (ValidationException|BotException|Exception $e) {
+        logger()->error($e->getMessage());
     }
     return redirect()->back()->with('error', 'error');
 })->name('telegram.user.exists');
