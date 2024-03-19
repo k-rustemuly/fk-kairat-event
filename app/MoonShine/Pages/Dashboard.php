@@ -45,6 +45,9 @@ class Dashboard extends Page
                         ->fields([
                             Heading::make($question->title),
                         ])
+                        ->submit('', [
+                            'style' => 'display:none'
+                        ])
                         ->buttons($variants->map(function($variant){
                             return ActionButton::make($variant->title)
                                 ->primary();
