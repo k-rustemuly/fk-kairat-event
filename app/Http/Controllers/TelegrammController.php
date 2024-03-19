@@ -27,4 +27,18 @@ class TelegrammController extends Controller
         $response = $bot->setWebHook(route('webhook.telegram'));
         dd($response);
     }
+
+    public function deleteWebhook()
+    {
+        $bot = InfoBot::makeBot();
+        $response = $bot->deleteWebHook();
+        dd($response);
+    }
+
+    public function infoWebhook()
+    {
+        $bot = InfoBot::makeBot();
+        dd($bot->infoWebhook());
+    }
+
 }

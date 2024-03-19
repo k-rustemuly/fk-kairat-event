@@ -159,4 +159,14 @@ abstract class TelegramBot
     {
         return $this->telegram->setWebhook($webhookUrl);
     }
+
+    public function deleteWebHook(array $data = []): ServerResponse
+    {
+        return $this->telegram->deleteWebHook($data);
+    }
+
+    public function infoWebhook(): ServerResponse
+    {
+        return Request::getWebhookInfo();
+    }
 }

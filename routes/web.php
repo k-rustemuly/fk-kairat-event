@@ -36,3 +36,5 @@ Route::group(['excluded_middleware' => ['web']], function () {
 });
 
 Route::get('/set/webhook/telegram', [TelegrammController::class, 'setWebhook']);
+Route::get('/delete/webhook/telegram', [TelegrammController::class, 'deleteWebhook']);
+Route::get('/info/webhook/telegram', [TelegrammController::class, 'infoWebhook']);
