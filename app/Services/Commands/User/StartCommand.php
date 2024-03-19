@@ -77,7 +77,6 @@ class StartCommand extends UserCommand
             'chat_id'      => $chat_id,
             'reply_markup' => Keyboard::remove(['selective' => true]),
         ];
-        logger()->debug($chat_id.' '.$text);
 
         if($participant = Participant::where('telegram_id', $chat_id)->first()) {
             Request::sendPhoto(

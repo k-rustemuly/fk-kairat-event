@@ -13,7 +13,6 @@ class TelegrammController extends Controller
     public function webhook()
     {
         try {
-            logger()->debug(now()->toString());
             $bot = InfoBot::makeBot();
             $bot->enableMysql();
             $bot->handle();
