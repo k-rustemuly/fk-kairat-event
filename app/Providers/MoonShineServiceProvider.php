@@ -5,18 +5,32 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\MoonShine\Resources\QrCodeResource;
+use App\MoonShine\Resources\QuestionResource;
+use App\MoonShine\Resources\UserRoleResource;
+use App\MoonShine\Resources\VariantResource;
+use Illuminate\Http\Request;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
-use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
 use MoonShine\Resources\MoonShineUserResource;
-use MoonShine\Resources\MoonShineUserRoleResource;
 
 class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 {
+    public function boot(): void
+    {
+        parent::boot();
+
+        moonshineAssets()->add([
+            'https://telegram.org/js/telegram-web-app.js',
+            'js/telegram.js',
+        ]);
+    }
+
     protected function resources(): array
     {
-        return [];
+        return [
+            new VariantResource()
+        ];
     }
 
     protected function pages(): array
@@ -34,15 +48,20 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 ),
                 MenuItem::make(
                     static fn() => __('moonshine::ui.resource.role_title'),
-                    new MoonShineUserRoleResource()
+                    new UserRoleResource()
                 ),
-            ]),
+            ])->canSee(fn(Request $request) => $request->user()->moonshine_user_role_id == 1),
 
             MenuItem::make(
                 static fn() => __('panel.menu.qr_codes'),
                 new QrCodeResource(),
                 'heroicons.qr-code'
-            ),
+            )->canSee(fn(Request $request) => $request->user()->moonshine_user_role_id == 1),
+
+            MenuItem::make(
+                static fn() => __('panel.menu.questions'),
+                new QuestionResource(),
+            )->canSee(fn(Request $request) => $request->user()->moonshine_user_role_id == 1),
         ];
     }
 

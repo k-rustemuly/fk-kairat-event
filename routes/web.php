@@ -1,10 +1,17 @@
 <?php
 
 use App\Http\Controllers\TelegrammController;
+use App\Models\Participant;
 use App\Models\QrCode as ModelsQrCode;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Intervention\Image\ImageManager;
+use MoonShine\MoonShineAuth;
+use Illuminate\Http\Request;
+use MoonShine\Models\MoonshineUser;
+use TgWebValid\Exceptions\BotException;
+use TgWebValid\Exceptions\ValidationException;
+use TgWebValid\TgWebValid;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +45,30 @@ Route::group(['excluded_middleware' => ['web']], function () {
 Route::get('/set/webhook/telegram', [TelegrammController::class, 'setWebhook']);
 Route::get('/delete/webhook/telegram', [TelegrammController::class, 'deleteWebhook']);
 Route::get('/info/webhook/telegram', [TelegrammController::class, 'infoWebhook']);
+
+Route::get('/tg', function () {
+    if(MoonShineAuth::guard()->check()) {
+        return redirect()->route('moonshine.index');
+    }
+    return view('telegram');
+})->name('telegram');
+
+Route::post('/telegram/user/exists', function (Request $request) {
+    $auth = $request->all()['data'];
+    try {
+        $tgWebValid = new TgWebValid(config('telegram.bot_api_key'), true);
+        $initData = $tgWebValid->bot()->validateInitData($auth);
+        $telegram_id = $initData->chat->id;
+        if($participant = Participant::where('telegram_id', $telegram_id)->first()) {
+            $user = MoonshineUser::firstOrCreate(
+                ['email' => $telegram_id],
+                ['moonshine_user_role_id' => 2, 'password' => 'no', 'name' => $participant->name]
+            );
+            MoonShineAuth::guard()->loginUsingId($user->id, true);
+            session()->regenerate();
+            return redirect()->route('moonshine.index');
+        }
+    } catch (ValidationException|BotException|Exception $e) {
+    }
+    return redirect()->back()->with('error', 'error');
+})->name('telegram.user.exists');

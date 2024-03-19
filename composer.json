@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.8",
         "longman/telegram-bot": "^0.82.0",
         "moonshine/moonshine": "^2.9",
-        "simplesoftwareio/simple-qrcode": "^4.2"
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "tg/tgwebvalid": "^4.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

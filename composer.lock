@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e7e1bd030ed44d0095883b08d6c21d0",
+    "content-hash": "5febc413d7a8cbef56dcfcb9688f180d",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -6487,6 +6487,71 @@
                 }
             ],
             "time": "2024-02-15T11:23:52+00:00"
+        },
+        {
+            "name": "tg/tgwebvalid",
+            "version": "v4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CrazyTapok-bit/tgWebValid.git",
+                "reference": "946355bf20650e87d5ec9d7f5aa1e658ef2bb0d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CrazyTapok-bit/tgWebValid/zipball/946355bf20650e87d5ec9d7f5aa1e658ef2bb0d1",
+                "reference": "946355bf20650e87d5ec9d7f5aa1e658ef2bb0d1",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "^2.67",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^9.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "TgWebValid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Сергій Засадинський",
+                    "email": "main.profile.mail@gmail.com"
+                }
+            ],
+            "description": "Library for Telegram Web App User Validation and Telegram Login Widget for PHP",
+            "keywords": [
+                "Authentication",
+                "authorization",
+                "login",
+                "telegram",
+                "validation",
+                "verification",
+                "webapp"
+            ],
+            "support": {
+                "docs": "https://github.com/CrazyTapok-bit/tgWebValid#readme",
+                "forum": "https://github.com/CrazyTapok-bit/tgWebValid/discussions",
+                "issues": "https://github.com/CrazyTapok-bit/tgWebValid/issues",
+                "source": "https://github.com/CrazyTapok-bit/tgWebValid"
+            },
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/user?u=99188087",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2023-11-21T13:46:05+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
