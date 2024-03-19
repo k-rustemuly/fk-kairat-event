@@ -69,7 +69,7 @@ class GenericmessageCommand extends SystemCommand
     {
         $message = $this->getMessage();
         $conversation = new Conversation(
-            $message->getFrom()->getId(),
+            $message->getChat()->getId(),
             $message->getChat()->getId()
         );
 
