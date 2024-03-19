@@ -71,7 +71,6 @@ class StartCommand extends UserCommand
         $chat    = $message->getChat();
         $text    = str($message->getText(true))->squish()->value();
         $chat_id = $chat->getId();
-        logger()->debug($chat_id.' '.$text);
         $data = [
             'chat_id'      => $chat_id,
             'reply_markup' => Keyboard::remove(['selective' => true]),
