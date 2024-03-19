@@ -17,6 +17,8 @@ use Throwable;
 use Illuminate\Support\Facades\Validator;
 use Longman\TelegramBot\Entities\KeyboardButton;
 
+use function Laravel\Prompts\text;
+
 /**
  * Start command
  */
@@ -75,6 +77,7 @@ class StartCommand extends UserCommand
             'chat_id'      => $chat_id,
             'reply_markup' => Keyboard::remove(['selective' => true]),
         ];
+        logger()->debug($chat_id.' '.$text);
 
         if($participant = Participant::where('telegram_id', $chat_id)->first()) {
             Request::sendPhoto(
@@ -105,7 +108,6 @@ class StartCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = __('panel.telegram.choose_language');
-                    $data['text'] = 'aaaa?';
                     $result = Request::sendMessage($data);
                     break;
                 }
