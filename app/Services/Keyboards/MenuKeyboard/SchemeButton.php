@@ -23,7 +23,7 @@ class SchemeButton extends TelegramButton
         $chat_id = $chat->getId();
         $data = [
             'chat_id'      => $chat_id,
-            'photo'        => url('images/scheme.png'),
+            'photo'        => url('scheme.png'),
             'reply_markup' => MenuKeyboard::make()->getKeyboard(),
         ];
         return Request::sendPhoto($data);
