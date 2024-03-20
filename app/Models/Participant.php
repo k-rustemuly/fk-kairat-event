@@ -23,6 +23,25 @@ class Participant extends Model
         'is_active',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'q1_t' => 'datetime',
+        'q2_t' => 'datetime',
+        'q3_t' => 'datetime',
+        'q4_t' => 'datetime',
+        'q5_t' => 'datetime',
+        'q6_t' => 'datetime',
+        'q7_t' => 'datetime',
+        'q8_t' => 'datetime',
+        'q9_t' => 'datetime',
+        'q10_t' => 'datetime',
+        'q11_t' => 'datetime',
+    ];
+
     public function qrCode()
     {
         return $this->hasOne(QrCode::class);
