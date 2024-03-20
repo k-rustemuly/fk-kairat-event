@@ -78,7 +78,9 @@ class Dashboard extends Page
                     ];
                 }
             }
-            return [];
+            return [
+                ActionButton::make('')->icon('heroicons.arrow-path')->success()
+            ];
         }
 
 		return [
