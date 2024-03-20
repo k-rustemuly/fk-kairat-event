@@ -6,6 +6,7 @@ use App\Models\Participant;
 use App\Models\QrCode;
 use App\Models\UserLanguage;
 use App\Services\Keyboards\ConfirmationKeyboard\ConfirmationKeyboard;
+use App\Services\Keyboards\MenuKeyboard\MenuKeyboard;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Keyboard;
@@ -85,6 +86,7 @@ class StartCommand extends UserCommand
                 ])
             );
             $data['text'] = __('panel.telegram.already_exists');
+            $data['reply_markup'] = MenuKeyboard::make()->getKeyboard();
             return Request::sendMessage($data);
         }
         $this->conversation = new Conversation($chat_id, $chat_id, $this->getName());
@@ -176,14 +178,8 @@ class StartCommand extends UserCommand
                     $notes['state'] = 4;
                     $this->conversation->update();
 
-                    // $data['reply_markup'] = ;
-
-                    $data['text'] = __('panel.telegram.phone_number');
-                    if ($text !== '') {
-                        $data['text'] = __('panel.telegram.share_contact_please');
-                    }
-                    // $result = Request::sendMessage($data);
-                    $result = Request::sendPhoto([
+                    $data['text'] = __('panel.telegram.share_contact_please');
+                    Request::sendPhoto([
                         'chat_id' => $chat_id,
                         'photo' => $this->getImageUrl('phone_number'),
                         'reply_markup' => (new Keyboard(
@@ -193,6 +189,7 @@ class StartCommand extends UserCommand
                             ->setResizeKeyboard(true)
                             ->setSelective(true)
                     ]);
+                    $result = Request::sendMessage($data);
                     break;
                 }
 
@@ -240,7 +237,8 @@ class StartCommand extends UserCommand
                     // $result = $this->sendPdf($lastQrCode);
                     $result = Request::sendPhoto([
                         'chat_id' => $chat_id,
-                        'photo' => route('qrCode', ['qrCode' => $lastQrCode->id, 'lang' => app()->getLocale()])
+                        'photo' => route('qrCode', ['qrCode' => $lastQrCode->id, 'lang' => app()->getLocale()]),
+                        'reply_markup' => MenuKeyboard::make()->getKeyboard()
                     ]);
                 } else {
                     $data['text'] = __('panel.telegram.registration_closed');
