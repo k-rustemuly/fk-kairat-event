@@ -74,7 +74,7 @@ class SupportCommand extends UserCommand
 
         if($participant = Participant::where('telegram_id', $chat_id)->first()) {
             Support::create([
-                'participant_id' => $participant,
+                'participant_id' => $participant->id,
                 'question' => $text
             ]);
         }
