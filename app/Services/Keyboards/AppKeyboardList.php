@@ -3,12 +3,14 @@
 namespace App\Services\Keyboards;
 
 use App\Services\Keyboards\ConfirmationKeyboard\ConfirmationKeyboard;
+use App\Services\Keyboards\MenuKeyboard\MenuKeyboard;
 
 class AppKeyboardList
 {
     private array $keyboards = [
         StartKeyboard::class,
-        ConfirmationKeyboard::class
+        ConfirmationKeyboard::class,
+        MenuKeyboard::class,
     ];
 
     /**
