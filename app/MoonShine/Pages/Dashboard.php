@@ -79,7 +79,7 @@ class Dashboard extends Page
                 }
             }
             return [
-                ActionButton::make('')->icon('heroicons.arrow-path')->success()
+                ActionButton::make('', route('moonshine.index'))->icon('heroicons.arrow-path')->success()
             ];
         }
 
