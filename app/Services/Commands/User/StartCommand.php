@@ -189,6 +189,7 @@ class StartCommand extends UserCommand
                             ->setResizeKeyboard(true)
                             ->setSelective(true)
                     ]);
+                    unset($data['reply_markup']);
                     $result = Request::sendMessage($data);
                     break;
                 }
