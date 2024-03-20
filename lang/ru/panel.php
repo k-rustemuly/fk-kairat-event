@@ -48,6 +48,7 @@ return [
         'answers' => 'Ответы',
         'message' => 'Сообщение',
         'created_at' => 'Дата и время',
+        'participant' => 'Участник',
     ],
     'buttons' => [
         'start' => 'Начать',
