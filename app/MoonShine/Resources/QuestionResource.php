@@ -14,6 +14,7 @@ use MoonShine\Decorations\Heading;
 use MoonShine\Enums\PageType;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\ID;
+use MoonShine\Fields\Preview;
 use MoonShine\Fields\Relationships\HasMany;
 use MoonShine\Fields\Text;
 use MoonShine\MoonShineRequest;
@@ -63,6 +64,7 @@ class QuestionResource extends ModelResource
                             ->required(),
                         Text::make(__('panel.fields.title_ru'), 'title_ru')
                             ->required(),
+                        Preview::make(__('panel.fields.answers'), formatted: fn($item) => $item->answers()->count()),
                     ])
             ]),
         ];
