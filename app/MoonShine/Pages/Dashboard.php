@@ -79,7 +79,9 @@ class Dashboard extends Page
                 }
             }
             return [
-                ActionButton::make('', route('moonshine.index'))->icon('heroicons.arrow-path')->success()
+                ActionButton::make(__('panel.buttons.refresh'), route('moonshine.index'))->icon('heroicons.arrow-path')
+                    ->success(),
+                Heading::make(__('panel.messages.refresh')),
             ];
         }
 
