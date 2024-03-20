@@ -49,6 +49,7 @@ return [
         'message' => 'Сообщение',
         'created_at' => 'Дата и время',
         'participant' => 'Участник',
+        'supports' => 'Запросы',
     ],
     'buttons' => [
         'start' => 'Начать',
