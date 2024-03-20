@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Participant extends Model
 {
@@ -50,5 +51,60 @@ class Participant extends Model
     public function settings()
     {
         return $this->hasOne(UserLanguage::class, 'telegram_id', 'telegram_id');
+    }
+
+    public function q1b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q1');
+    }
+
+    public function q2b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q2');
+    }
+
+    public function q3b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q3');
+    }
+
+    public function q4b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q4');
+    }
+
+    public function q5b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q5');
+    }
+
+    public function q6b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q6');
+    }
+
+    public function q7b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q7');
+    }
+
+    public function q8b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q8');
+    }
+
+    public function q9b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q9');
+    }
+
+    public function q10b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q10');
+    }
+
+    public function q11b(): BelongsTo
+    {
+        return $this->belongsTo(Variant::class, 'q11');
     }
 }

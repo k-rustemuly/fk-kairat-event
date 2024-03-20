@@ -153,7 +153,7 @@ class QuestionsSeeder extends Seeder
             ],
             [
                 'title_kk' => 'Какая команда надует 5 мячей быстрее?',
-                'title_ru' => 'Какая команда справится лучше?',
+                'title_ru' => 'Какая команда надует 5 мячей быстрее?',
                 'variants' => [
                     [
                         'title_kk' => 'ФК Кайрат',
