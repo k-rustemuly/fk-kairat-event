@@ -12,6 +12,7 @@ use MoonShine\Decorations\Block;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Relationships\BelongsTo;
+use MoonShine\Fields\Relationships\HasMany;
 use MoonShine\Fields\Select;
 use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
@@ -75,7 +76,14 @@ class ParticipantResource extends ModelResource
                 Text::make(__('panel.fields.birth_year'), 'birth_year'),
                 Text::make(__('panel.fields.phone_number'), 'phone_number'),
                 Switcher::make(__('panel.fields.is_active'), 'is_active'),
-                ...$questionFields
+                ...$questionFields,
+                HasMany::make(__('panel.fields.supports'), 'supports', resource: new SupportResource)
+                    ->hideOnForm()
+                    ->hideOnIndex()
+                    ->fields([
+                        Text::make(__('panel.fields.message'), 'question'),
+                        Text::make(__('panel.fields.created_at'), 'created_at')
+                    ])
             ]),
         ];
     }

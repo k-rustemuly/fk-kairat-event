@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Participant extends Model
 {
@@ -51,6 +52,11 @@ class Participant extends Model
     public function settings()
     {
         return $this->hasOne(UserLanguage::class, 'telegram_id', 'telegram_id');
+    }
+
+    public function supports(): HasMany
+    {
+        return $this->hasMany(Support::class, 'participant_id');
     }
 
     public function q1b(): BelongsTo

@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\MoonShine\Resources\ParticipantResource;
 use App\MoonShine\Resources\QrCodeResource;
 use App\MoonShine\Resources\QuestionResource;
+use App\MoonShine\Resources\SupportResource;
 use App\MoonShine\Resources\UserRoleResource;
 use App\MoonShine\Resources\VariantResource;
 use Illuminate\Http\Request;
@@ -67,6 +68,11 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             MenuItem::make(
                 static fn() => __('panel.menu.participants'),
                 new ParticipantResource(),
+            )->canSee(fn(Request $request) => $request->user()->moonshine_user_role_id == 1),
+
+            MenuItem::make(
+                static fn() => __('panel.menu.support'),
+                new SupportResource(),
             )->canSee(fn(Request $request) => $request->user()->moonshine_user_role_id == 1),
 
         ];
