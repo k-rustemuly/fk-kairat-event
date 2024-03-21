@@ -4,6 +4,7 @@ use App\Http\Controllers\TelegrammController;
 use App\Models\Participant;
 use App\Models\QrCode as ModelsQrCode;
 use App\Models\UserChat;
+use App\Models\UserLanguage;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Intervention\Image\ImageManager;
@@ -49,7 +50,9 @@ Route::get('/info/webhook/telegram', [TelegrammController::class, 'infoWebhook']
 
 Route::get('/tg', function () {
     if(MoonShineAuth::guard()->check()) {
-        return redirect()->route('moonshine.index');
+        $telegram_id = MoonShineAuth::guard()->user()->email;
+        $language = UserLanguage::where('telegram_id', $telegram_id)->first()?->language??'ru';
+        return redirect()->route('moonshine.index', ['change-moonshine-locale' => $language]);
     }
     return view('telegram');
 })->name('telegram');
@@ -66,9 +69,10 @@ Route::post('/telegram/user/exists', function (Request $request) {
                 ['email' => $telegram_id],
                 ['moonshine_user_role_id' => 2, 'password' => 'no', 'name' => $participant->name]
             );
+            $language = UserLanguage::where('telegram_id', $telegram_id)->first()?->language??'ru';
             MoonShineAuth::guard()->loginUsingId($user->id, true);
             session()->regenerate();
-            return redirect()->route('moonshine.index');
+            return redirect()->route('moonshine.index', ['change-moonshine-locale' => $language]);
         }
     } catch (ValidationException|BotException|Exception $e) {
         logger()->error($e->getMessage());

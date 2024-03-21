@@ -84,6 +84,7 @@ return [
     ],
     'locales' => [
         'ru',
+        'kk'
     ],
 
     'global_search' => [
