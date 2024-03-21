@@ -71,14 +71,7 @@ class SupportCommand extends UserCommand
         $data = [
             'chat_id'      => $chat_id,
         ];
-
-        if($participant = Participant::where('telegram_id', $chat_id)->first()) {
-            Support::create([
-                'participant_id' => $participant->id,
-                'question' => $text
-            ]);
-        }
-        $data['text'] = __('panel.telegram.question_accepted');
+        $data['text'] = __('panel.telegram.menu');
         $data['reply_markup'] = MenuKeyboard::make()->getKeyboard();
         return Request::sendMessage($data);
     }

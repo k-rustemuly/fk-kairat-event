@@ -21,6 +21,7 @@ return [
         'support' => 'Задать вопрос',
         'question' => 'Чем мы можем помочь?',
         'question_accepted' => 'Вопрос принят!',
+        'menu' => 'Мәзір',
     ],
     'menu' => [
         'qr_codes' => 'QR коды',
