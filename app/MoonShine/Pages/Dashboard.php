@@ -123,12 +123,9 @@ class Dashboard extends Page
     public function test()
     {
         InfoBot::makeBot();
-        $data = [
-            'chat_id'      => '7132087958',
-            'text' => 'aaaa',
-            'photo' => url('attention.png')
-        ];
-        Request::sendPhoto($data);
+        $data = ['chat_id' => '7132087958'];
+        Request::sendPhoto(array_merge($data, ['photo' => url('attention.png')]));
+        Request::sendMessage(array_merge($data, ['text' => 'Маленькое напоминание для наших молодых гостей с зелеными браслетами: к сожалению, из-за возрастных ограничений, установленных законом, вам придется попрощаться с нами через 30 минут. Давайте уважать правила и заканчивать вечеринку для вас на этой веселой ноте! \n Спасибо за понимание и за то, что вы с нами!']));
         return back();
     }
 }
