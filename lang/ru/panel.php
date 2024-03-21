@@ -23,6 +23,7 @@ return [
         'question_accepted' => 'Вопрос принят!',
         'menu' => 'Меню',
         'my_qr' => 'Мой QR код',
+        'schedule' => 'Расписание',
     ],
     'menu' => [
         'qr_codes' => 'QR коды',

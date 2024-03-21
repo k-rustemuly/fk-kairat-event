@@ -23,6 +23,7 @@ return [
         'question_accepted' => 'Сұрақ қабылданды!',
         'menu' => 'Мәзір',
         'my_qr' => 'Менің QR кодым',
+        'schedule' => 'Кесте',
     ],
     'menu' => [
         'qr_codes' => 'QR кодтар',
