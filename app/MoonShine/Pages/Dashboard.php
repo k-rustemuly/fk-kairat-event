@@ -7,6 +7,8 @@ namespace App\MoonShine\Pages;
 use App\Models\Conversation;
 use App\Models\Participant;
 use App\Models\Question;
+use App\Services\InfoBot;
+use Longman\TelegramBot\Request;
 use MoonShine\ActionButtons\ActionButton;
 use MoonShine\Components\FormBuilder;
 use MoonShine\Decorations\Heading;
@@ -90,7 +92,10 @@ class Dashboard extends Page
                 ->values([
                     __('panel.messages.registered') => Participant::count(),
                     __('panel.messages.not_registered') => Conversation::notRegistered()->count()
-                ])
+                ]),
+            ActionButton::make('2006')
+                ->primary()
+                ->method('test')
         ];
 
 	}
@@ -112,6 +117,18 @@ class Dashboard extends Page
             }
         }
         MoonShineUI::toast(__('panel.messages.answered_error'), 'error');
+        return back();
+    }
+
+    public function test()
+    {
+        InfoBot::makeBot();
+        $data = [
+            'chat_id'      => '7132087958',
+            'text' => 'aaaa',
+            'photo' => url('attention.png')
+        ];
+        Request::sendPhoto($data);
         return back();
     }
 }
