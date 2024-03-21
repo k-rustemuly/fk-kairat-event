@@ -7,8 +7,11 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Participant;
 use App\Models\Question;
+use Illuminate\Notifications\Action;
+use MoonShine\ActionButtons\ActionButton;
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
+use MoonShine\Enums\PageType;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Relationships\HasMany;
@@ -27,6 +30,8 @@ class ParticipantResource extends ModelResource
 
     protected string $sortDirection = 'ASC';
 
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
+
     protected array $with = [
         'q1b',
         'q2b',
@@ -39,11 +44,13 @@ class ParticipantResource extends ModelResource
         'q9b',
         'q10b',
         'q11b',
+        'settings',
+        'qrCode'
     ];
 
     public function getActiveActions(): array
     {
-        return ['view'];
+        return ['view', 'update'];
     }
 
     protected bool $saveFilterState = true;
@@ -62,12 +69,15 @@ class ParticipantResource extends ModelResource
                     __('panel.fields.question', ['q' => $question->id]),
                     'q'.$question->id,
                     fn($item) => $item->{"q$question->id".'b'}?->title??$item->{"q$question->id".'b'}
-                )->showOnExport(),
+                )
+                ->showOnExport()
+                ->hideOnForm(),
                 Date::make(__('panel.fields.question_time', ['q' => $question->id]), 'q'.$question->id.'_t')
                     ->sortable()
                     ->withTime()
                     ->format('H:i:s')
                     ->showOnExport()
+                    ->hideOnForm()
             ];
         })->toArray();
         return [
@@ -76,7 +86,7 @@ class ParticipantResource extends ModelResource
                 Text::make(__('panel.fields.name'), 'name')->showOnExport(),
                 Text::make(__('panel.fields.surname'), 'surname')->showOnExport(),
                 Text::make(__('panel.fields.birth_year'), 'birth_year')->showOnExport(),
-                Text::make(__('panel.fields.phone_number'), 'phone_number')->showOnExport(),
+                Text::make(__('panel.fields.phone_number'), 'phone_number')->showOnExport()->hideOnForm(),
                 Switcher::make(__('panel.fields.is_active'), 'is_active')->showOnExport(),
                 ...$questionFields,
                 HasMany::make(__('panel.fields.supports'), 'supports', resource: new SupportResource)
@@ -138,6 +148,18 @@ class ParticipantResource extends ModelResource
     public function export(): ?ExportHandler
     {
         return ExportHandler::make(__('moonshine::ui.export'));
+    }
+
+    /**
+     * @return array<ActionButton>
+     */
+    public function buttons(): array
+    {
+        return [
+            ActionButton::make('QR', function($item) {
+                return  route('qrCode', ['qrCode' => $item->qrCode?->id??'0', 'lang' => $item->settings?->language??'ru']);
+            })
+        ];
     }
 
 }
