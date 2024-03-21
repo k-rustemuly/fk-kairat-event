@@ -2,6 +2,7 @@
 
 namespace App\Services\Keyboards\MenuKeyboard;
 
+use App\Models\Participant;
 use App\Services\Entities\TelegramButton;
 use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\Keyboard;
@@ -24,9 +25,16 @@ class SupportButton extends TelegramButton
         $chat_id = $chat->getId();
         $data = [
             'chat_id'      => $chat_id,
-            'text'         => __('panel.telegram.question'),
-            'reply_markup' => Keyboard::remove(['selective' => true]),
+            'reply_markup' => MenuKeyboard::make()->getKeyboard(),
         ];
+        if($participant = Participant::with('settings')->where('telegram_id', $chat_id)->first()) {
+            return Request::sendPhoto(
+                array_merge($data, [
+                    'photo' => route('qrCode', ['qrCode' => $participant->qrCode->id, 'lang' => $participant->settings?->language??'ru'])
+                ])
+            );
+        }
+        $data['text'] = '*';
         $result = Request::sendMessage($data);
         return $result;
     }

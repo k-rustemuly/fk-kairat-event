@@ -22,6 +22,7 @@ return [
         'question' => 'Біз қалай көмектесе аламыз?',
         'question_accepted' => 'Сұрақ қабылданды!',
         'menu' => 'Мәзір',
+        'my_qr' => 'Менің QR кодым',
     ],
     'menu' => [
         'qr_codes' => 'QR кодтар',
