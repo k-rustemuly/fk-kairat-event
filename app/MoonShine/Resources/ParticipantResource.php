@@ -11,11 +11,12 @@ use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\ID;
-use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Relationships\HasMany;
 use MoonShine\Fields\Select;
 use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
+use MoonShine\Handlers\ExportHandler;
+use MoonShine\Metrics\ValueMetric;
 
 /**
  * @extends ModelResource<Participant>
@@ -61,21 +62,22 @@ class ParticipantResource extends ModelResource
                     __('panel.fields.question', ['q' => $question->id]),
                     'q'.$question->id,
                     fn($item) => $item->{"q$question->id".'b'}?->title??$item->{"q$question->id".'b'}
-                ),
+                )->showOnExport(),
                 Date::make(__('panel.fields.question_time', ['q' => $question->id]), 'q'.$question->id.'_t')
                     ->sortable()
                     ->withTime()
                     ->format('H:i:s')
+                    ->showOnExport()
             ];
         })->toArray();
         return [
             Block::make([
-                ID::make()->sortable(),
-                Text::make(__('panel.fields.name'), 'name'),
-                Text::make(__('panel.fields.surname'), 'surname'),
-                Text::make(__('panel.fields.birth_year'), 'birth_year'),
-                Text::make(__('panel.fields.phone_number'), 'phone_number'),
-                Switcher::make(__('panel.fields.is_active'), 'is_active'),
+                ID::make()->sortable()->showOnExport(),
+                Text::make(__('panel.fields.name'), 'name')->showOnExport(),
+                Text::make(__('panel.fields.surname'), 'surname')->showOnExport(),
+                Text::make(__('panel.fields.birth_year'), 'birth_year')->showOnExport(),
+                Text::make(__('panel.fields.phone_number'), 'phone_number')->showOnExport(),
+                Switcher::make(__('panel.fields.is_active'), 'is_active')->showOnExport(),
                 ...$questionFields,
                 HasMany::make(__('panel.fields.supports'), 'supports', resource: new SupportResource)
                     ->hideOnForm()
@@ -124,4 +126,18 @@ class ParticipantResource extends ModelResource
             ...$questionFields,
         ];
     }
+
+    public function getIndexPageComponents(): array
+    {
+        return [
+            ValueMetric::make(__('panel.menu.participants'))
+                ->value($this->items()->count())
+        ];
+    }
+
+    public function export(): ?ExportHandler
+    {
+        return ExportHandler::make(__('moonshine::ui.export'));
+    }
+
 }
