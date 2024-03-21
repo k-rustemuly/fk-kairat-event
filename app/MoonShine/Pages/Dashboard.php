@@ -123,9 +123,19 @@ class Dashboard extends Page
     public function test()
     {
         InfoBot::makeBot();
-        $data = ['chat_id' => '7132087958'];
-        Request::sendPhoto(array_merge($data, ['photo' => url('attention.png')]));
-        Request::sendMessage(array_merge($data, ['text' => 'Маленькое напоминание для наших молодых гостей с зелеными браслетами: к сожалению, из-за возрастных ограничений, установленных законом, вам придется попрощаться с нами через 30 минут. Давайте уважать правила и заканчивать вечеринку для вас на этой веселой ноте! \n Спасибо за понимание и за то, что вы с нами!']));
+        $chat_ids = Participant::with('settings')->where('birth_year', '>=', '2006')->get()->pluck('settings.language','telegram_id')->toArray();
+        $users_chunks = array_chunk($chat_ids, 12, true);
+        $counter = 0;
+        foreach ($users_chunks as $chunk) {
+            foreach ($chunk as $chat_id => $lang) {
+                $data = ['chat_id' => $chat_id];
+                Request::sendPhoto(array_merge($data, ['photo' => url('attention.png')]));
+                Request::sendMessage(array_merge($data, ['text' => __('panel.messages.2006', locale: $lang)]));
+                $counter++;
+            }
+            sleep(1);
+        }
+        MoonShineUI::toast($counter.'', 'success');
         return back();
     }
 }
