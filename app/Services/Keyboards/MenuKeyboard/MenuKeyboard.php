@@ -4,6 +4,7 @@ namespace App\Services\Keyboards\MenuKeyboard;
 
 use App\Services\Keyboards\TelegramKeyboard;
 use Longman\TelegramBot\Entities\InlineKeyboard;
+use Longman\TelegramBot\Entities\InlineKeyboardButton;
 use Longman\TelegramBot\Entities\Keyboard;
 
 class MenuKeyboard extends TelegramKeyboard
@@ -12,7 +13,8 @@ class MenuKeyboard extends TelegramKeyboard
     {
         return new InlineKeyboard(
             [$this->inlineButton(SchemeButton::make()->setText(__('panel.telegram.scheme')))],
-            [$this->inlineButton(SupportButton::make()->setText(__('panel.telegram.support')))],
+            [new InlineKeyboardButton(['text' => __('panel.telegram.support'), 'url' => 'https://t.me/sembayevaamina'])]
+            // [$this->inlineButton(SupportButton::make()->setText(__('panel.telegram.support')))],
         );
     }
 }
