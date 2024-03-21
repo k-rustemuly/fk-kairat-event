@@ -21,7 +21,7 @@ return [
         'support' => 'Сұрақ қою',
         'question' => 'Біз қалай көмектесе аламыз?',
         'question_accepted' => 'Сұрақ қабылданды!',
-        'menu' => 'Меню',
+        'menu' => 'Мәзір',
     ],
     'menu' => [
         'qr_codes' => 'QR кодтар',
