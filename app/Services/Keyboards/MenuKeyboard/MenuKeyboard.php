@@ -13,7 +13,7 @@ class MenuKeyboard extends TelegramKeyboard
     {
         return new InlineKeyboard(
             [$this->inlineButton(SchemeButton::make()->setText(__('panel.telegram.scheme')))],
-            [new InlineKeyboardButton(['text' => __('panel.telegram.support'), 'url' => 'https://t.me/sembayevaamina'])]
+            [new InlineKeyboardButton(['text' => __('panel.telegram.support'), 'url' => 'https://t.me/sembayevaamina'])],
             [$this->inlineButton(SupportButton::make()->setText(__('panel.telegram.my_qr')))],
         );
     }
